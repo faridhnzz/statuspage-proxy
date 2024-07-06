@@ -1,0 +1,8 @@
+statuspage:
+  - name: 'Tuna Status'
+    domain: 'status.tunadev.com'
+    url: 'https://tunadev.statuspage.io'
+
+	- name: 'Fontlay Status'
+    domain: 'status.tunadev.com'
+    url: 'https://tunadev.statuspage.io'
