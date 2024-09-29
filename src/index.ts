@@ -2,6 +2,7 @@ import { AttributeRewriter, AttributeRemover } from './utils';
 import { apiStatus } from './types';
 
 const routes: Record<string, string> = {
+	// your custom domain : statuspage.io Subdomain url
 	'status.tunadev.com': 'https://tunadev.statuspage.io',
 	'status.fontlay.com': 'https://fontlay.statuspage.io',
 };
