@@ -6,13 +6,11 @@ const routes: Record<string, string> = {
 	'status.fontlay.com': 'https://fontlay.statuspage.io',
 };
 
-// Function to handle incoming requests
 async function handleRequest(request: Request) {
 	const url = new URL(request.url);
 	const upstream = routeByHosts(url.hostname);
 	if (!upstream) return new Response('Routes not found :(', { status: 404 });
 
-	// Create a new request to the upstream status page URL
 	const newUrl = new URL(upstream + url.pathname);
 	const newReq = new Request(newUrl.toString(), {
 		method: request.method,
@@ -23,14 +21,13 @@ async function handleRequest(request: Request) {
 	newReq.headers.set('Host', newUrl.host);
 	newReq.headers.set('Referer', newUrl.origin);
 
-	// HTML Rewriter instance for modifying HTML responses
+	// HTML Rewriter for remove footer :hehe:
 	const rewriter = new HTMLRewriter()
 		.on('a', new AttributeRewriter('href', upstream))
 		.on('div.page-footer.border-color.font-small > span > a', new AttributeRewriter('href', upstream))
 		.on('link[rel="alternate"]', new AttributeRewriter('href', upstream))
 		.on('div.incidents-list.format-expanded', new AttributeRemover());
 
-	// Fetch the response from the upstream server
 	let res = await fetch(newReq);
 	const filteredHeaders = new Headers(res.headers);
 
@@ -48,7 +45,6 @@ async function handleRequest(request: Request) {
 	headersToDelete.forEach((header) => filteredHeaders.delete(header));
 	res = new Response(res.body, { ...res, headers: filteredHeaders });
 
-	// Handle different content types
 	const contentType = res.headers.get('Content-Type');
 
 	if (contentType?.startsWith('text/html')) {
@@ -71,7 +67,6 @@ async function handleRequest(request: Request) {
 	return res;
 }
 
-// Function to determine the upstream URL based on hostname
 function routeByHosts(host: string): string | null {
 	return routes[host] || null;
 }
